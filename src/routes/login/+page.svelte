@@ -45,25 +45,27 @@
     }
   }
 
-  function handleKeydown(e) {
+  function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') handleLogin();
   }
 </script>
 
-<div class="auth-bg">
-  <div class="auth-card">
+<div class="min-h-screen flex items-center justify-center bg-background p-6 font-sans">
+  <div class="w-full max-w-md bg-card text-card-foreground border border-border rounded-xl shadow-lg overflow-hidden flex flex-col">
 
     <!-- Header -->
-    <div class="auth-header">
-      <div class="dswd-badge">DSWD</div>
-      <h1>Welcome back</h1>
-      <p>Sign in to access FACED records</p>
+    <div class="bg-primary text-primary-foreground p-8 text-center flex flex-col items-center">
+      <div class="inline-block bg-background/20 border border-background/30 text-primary-foreground text-[11px] font-bold tracking-widest px-3 py-1 rounded-full mb-4 uppercase">
+        DSWD
+      </div>
+      <h1 class="text-2xl font-bold mb-1">Welcome back</h1>
+      <p class="text-sm text-primary-foreground/80 m-0">Sign in to access FACED records</p>
     </div>
 
     <!-- Form -->
-    <div class="auth-form">
-      <div class="field-group">
-        <label for="email">Email address</label>
+    <div class="p-8 flex flex-col gap-5">
+      <div class="flex flex-col gap-2">
+        <label for="email" class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email address</label>
         <input
           id="email"
           type="email"
@@ -72,12 +74,13 @@
           on:keydown={handleKeydown}
           disabled={status === 'loading'}
           autocomplete="email"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
         />
       </div>
 
-      <div class="field-group">
-        <label for="password">Password</label>
-        <div class="password-wrap">
+      <div class="flex flex-col gap-2">
+        <label for="password" class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Password</label>
+        <div class="relative">
           <input
             id="password"
             type={showPassword ? 'text' : 'password'}
@@ -86,10 +89,11 @@
             on:keydown={handleKeydown}
             disabled={status === 'loading'}
             autocomplete="current-password"
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors pr-10"
           />
           <button
             type="button"
-            class="toggle-pw"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors opacity-70 hover:opacity-100 p-1"
             on:click={() => showPassword = !showPassword}
             tabindex="-1"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
@@ -100,18 +104,22 @@
       </div>
 
       {#if status === 'error'}
-        <div class="alert alert-error" role="alert">
+        <div class="bg-destructive/15 text-destructive border border-destructive/20 px-4 py-3 rounded-md text-sm font-medium" role="alert">
           ⚠ {errorMessage}
         </div>
       {/if}
 
       <button
-        class="btn-submit"
+        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mt-2"
         on:click={handleLogin}
         disabled={status === 'loading'}
       >
         {#if status === 'loading'}
-          <span class="spinner"></span> Signing in…
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Signing in…
         {:else}
           Sign In
         {/if}
@@ -119,216 +127,14 @@
     </div>
 
     <!-- Footer -->
-    <div class="auth-footer">
-      <p>Don't have an account? <a href="/register">Create one</a></p>
+    <div class="p-6 text-center border-t border-border bg-muted/20">
+      <p class="text-sm text-muted-foreground m-0">
+        Don't have an account? 
+        <a href="/register" class="font-semibold text-primary hover:underline hover:text-primary/80 transition-colors">
+          Create one
+        </a>
+      </p>
     </div>
 
   </div>
 </div>
-
-<style>
-  .auth-bg {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--background);
-    padding: 1.5rem;
-    font-family: 'JetBrains Mono Variable', monospace;
-  }
-
-  .auth-card {
-    width: 100%;
-    max-width: 420px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-  }
-
-  /* Header */
-  .auth-header {
-    background: #1c3d70;
-    color: white;
-    padding: 2rem 2rem 1.5rem;
-    text-align: center;
-  }
-
-  .dswd-badge {
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    padding: 3px 10px;
-    border-radius: 999px;
-    margin-bottom: 1rem;
-  }
-
-  .auth-header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 0.35rem;
-    color: white;
-  }
-
-  .auth-header p {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0;
-  }
-
-  /* Form body */
-  .auth-form {
-    padding: 1.75rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-  }
-
-  .field-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .field-group label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--muted-foreground);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .field-group input {
-    padding: 0.65rem 0.85rem;
-    border: 1px solid var(--input);
-    border-radius: var(--radius-md);
-    background: var(--background);
-    color: var(--foreground);
-    font-family: inherit;
-    font-size: 0.9rem;
-    transition: border-color 0.15s, outline 0.15s;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .field-group input:focus {
-    outline: 2px solid #1c3d70;
-    outline-offset: -1px;
-    border-color: transparent;
-  }
-
-  .field-group input:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .password-wrap {
-    position: relative;
-  }
-
-  .password-wrap input {
-    padding-right: 2.75rem;
-  }
-
-  .toggle-pw {
-    position: absolute;
-    right: 0.6rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    padding: 0.25rem;
-    opacity: 0.6;
-    transition: opacity 0.15s;
-  }
-  .toggle-pw:hover { opacity: 1; }
-
-  /* Alert */
-  .alert {
-    padding: 0.65rem 0.85rem;
-    border-radius: var(--radius-md);
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  .alert-error {
-    background: #fee2e2;
-    color: #b91c1c;
-    border: 1px solid #fca5a5;
-  }
-
-  /* Submit button */
-  .btn-submit {
-    background: #1c3d70;
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1.5rem;
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    transition: opacity 0.15s, transform 0.1s;
-    width: 100%;
-    margin-top: 0.25rem;
-  }
-
-  .btn-submit:hover:not(:disabled) {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
-
-  .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  /* Spinner inside button */
-  .spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Footer */
-  .auth-footer {
-    padding: 1rem 2rem 1.5rem;
-    text-align: center;
-    border-top: 1px solid var(--border);
-  }
-
-  .auth-footer p {
-    font-size: 0.85rem;
-    color: var(--muted-foreground);
-    margin: 0;
-  }
-
-  .auth-footer a {
-    color: #1c3d70;
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .auth-footer a:hover {
-    text-decoration: underline;
-  }
-</style>
