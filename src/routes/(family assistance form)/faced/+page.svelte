@@ -1,4 +1,5 @@
 ﻿<script>
+  import { onMount } from 'svelte';
   import dswdLogo from '$lib/assets/dswd.png';
 
   const CHECK = '\u2714';
@@ -6,20 +7,105 @@
   let isPrinting = false;
   let saveStatus = 'idle'; // 'idle' | 'saving' | 'saved' | 'error'
   let saveMessage = '';
+  
+  /** @type {string | null} */
+  let editId = null;
+
+  function formatForDateInput(val) {
+    if (!val) return '';
+    return typeof val === 'string' ? val.substring(0, 10) : '';
+  }
+
+  onMount(async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if (id) {
+      editId = id;
+      try {
+        const res = await fetch(`/api/faced/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          // Convert snake_case DB record back to camelCase formData
+          formData = {
+            serialNumber: data.serial_number || '',
+            region: data.region || '',
+            province: data.province || '',
+            cityMunicipality: data.city_municipality || '',
+            district: data.district || '',
+            barangay: data.barangay || '',
+            evacuationCenter: data.evacuation_center || '',
+            
+            lastName: data.last_name || '',
+            firstName: data.first_name || '',
+            middleName: data.middle_name || '',
+            nameExt: data.name_ext || '',
+            birthdate: formatForDateInput(data.birthdate),
+            age: data.age || '',
+            birthplace: data.birthplace || '',
+            sex: data.sex || '',
+            
+            civilStatus: data.civil_status || '',
+            mothersMaidenName: data.mothers_maiden_name || '',
+            religion: data.religion || '',
+            occupation: data.occupation || '',
+            monthlyIncome: data.monthly_income || '',
+            idCardPresented: data.id_card_presented || '',
+            idCardNumber: data.id_card_number || '',
+            contactPrimary: data.contact_primary || '',
+            contactAlternate: data.contact_alternate || '',
+            
+            address: {
+              houseNo: data.addr_house_no || '',
+              street: data.addr_street || '',
+              subdivision: data.addr_subdivision || '',
+              barangay: data.addr_barangay || '',
+              city: data.addr_city || '',
+              province: data.addr_province || '',
+              zipcode: data.addr_zipcode || ''
+            },
+            
+            is4Ps: data.is_4ps || false,
+            ipEthnicity: data.ip_ethnicity || '',
+            
+            familyMembers: Array.from({ length: 15 }, (_, i) => {
+              const m = (data.family_members || [])[i] || {};
+              return {
+                name: m.name || '',
+                relation: m.relation || '',
+                birthdate: formatForDateInput(m.birthdate),
+                age: m.age || '',
+                sex: m.sex || '',
+                education: m.education || '',
+                occupation: m.occupation || '',
+                vulnerability: m.vulnerability || ''
+              };
+            }),
+            
+            houseOwnership: data.house_ownership || '',
+            shelterDamage: data.shelter_damage || ''
+          };
+        }
+      } catch (err) {
+        console.error('Failed to load record for editing:', err);
+      }
+    }
+  });
 
   async function saveToDatabase() {
     saveStatus = 'saving';
     saveMessage = '';
     try {
-      const res = await fetch('/api/faced', {
-        method: 'POST',
+      const url = editId ? `/api/faced/${editId}` : '/api/faced';
+      const method = editId ? 'PUT' : 'POST';
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || `HTTP ${res.status}`);
       saveStatus = 'saved';
-      saveMessage = `Saved! Record ID: ${data.id}`;
+      saveMessage = editId ? `Updated! Record ID: ${data.id}` : `Saved! Record ID: ${data.id}`;
     } catch (err) {
       saveStatus = 'error';
       saveMessage = `Failed to save: ${err instanceof Error ? err.message : String(err)}`;
@@ -209,7 +295,7 @@
             <div class="form-group"><label>11. Birthdate</label><input type="date" bind:value={formData.birthdate} /></div>
             <div class="form-group"><label>19. Monthly Family Net Income</label><input type="text" bind:value={formData.monthlyIncome} /></div>
             
-            <div class="form-group"><label>12. Age</label><input type="number" bind:value={formData.age} /></div>
+            <div class="form-group"><label>12. Age</label><input type="number" bind:value={formData.age} readonly={!!formData.birthdate} tabindex={formData.birthdate ? -1 : 0} /></div>
             <div class="form-group"><label>20. ID Card Presented</label>
               <select bind:value={formData.idCardPresented}>
                 <option value="">-- Select ID --</option>
@@ -271,7 +357,7 @@
             <table class="w-full text-sm">
               <thead>
                 <tr>
-                  <th>Family Members</th>
+                  <th style="min-width: 250px;">Family Members</th>
                   <th>Relation</th>
                   <th>Birthdate</th>
                   <th>Age</th>
@@ -285,9 +371,26 @@
                 {#each formData.familyMembers as member, i}
                   <tr>
                     <td><input type="text" bind:value={member.name} class="w-full" /></td>
-                    <td><input type="text" bind:value={member.relation} class="w-full" /></td>
-                    <td><input type="date" bind:value={member.birthdate} on:change={() => member.age = calculateAge(member.birthdate)} class="w-full" /></td>
-                    <td><input type="number" bind:value={member.age} class="w-full" /></td>
+                    <td>
+                      <select bind:value={member.relation} class="w-full">
+                        <option value=""></option>
+                        <option value="SPOUSE">SPOUSE</option>
+                        <option value="SON">SON</option>
+                        <option value="DAUGHTER">DAUGHTER</option>
+                        <option value="NIECE">NIECE</option>
+                        <option value="NEPHEW">NEPHEW</option>
+                        <option value="MOTHER">MOTHER</option>
+                        <option value="FATHER">FATHER</option>
+                        <option value="SISTER IN LAW">SISTER IN LAW</option>
+                        <option value="BROTHER IN LAW">BROTHER IN LAW</option>
+                        <option value="GRANDSON">GRANDSON</option>
+                        <option value="GRANDAUGHTER">GRANDAUGHTER</option>
+                        <option value="GRANDFATHER">GRANDFATHER</option>
+                        <option value="GRANDMOTHER">GRANDMOTHER</option>
+                      </select>
+                    </td>
+                    <td><input type="date" bind:value={member.birthdate} on:input={() => formData.familyMembers[i].age = calculateAge(member.birthdate)} class="w-full" /></td>
+                    <td><input type="number" bind:value={member.age} class="w-full" readonly={!!member.birthdate} tabindex={member.birthdate ? -1 : 0} /></td>
                     <td>
                       <select bind:value={member.sex} class="w-full">
                         <option value=""></option>
@@ -295,7 +398,18 @@
                         <option value="F">F</option>
                       </select>
                     </td>
-                    <td><input type="text" bind:value={member.education} class="w-full" /></td>
+                    <td>
+                      <select bind:value={member.education} class="w-full">
+                        <option value=""></option>
+                        <option value="ELEMENTARY GRADUATE">ELEMENTARY GRADUATE</option>
+                        <option value="HIGH SCHOOL GRADUATE">HIGH SCHOOL GRADUATE</option>
+                        <option value="COLLEGE GRADUATE">COLLEGE GRADUATE</option>
+                        <option value="VOCATIONAL (TESDA 2 YEARS)">VOCATIONAL (TESDA 2 YEARS)</option>
+                        <option value="UNDERGRADUATE">UNDERGRADUATE</option>
+                        <option value="MASTERAL DEGREE">MASTERAL DEGREE</option>
+                        <option value="DOCTORAL DEGREE">DOCTORAL DEGREE</option>
+                      </select>
+                    </td>
                     <td><input type="text" bind:value={member.occupation} class="w-full" /></td>
                     <td><input type="text" bind:value={member.vulnerability} class="w-full" /></td>
                   </tr>
@@ -338,6 +452,8 @@
               Saving...
             {:else if saveStatus === 'saved'}
               ✓ Saved
+            {:else if editId}
+              💾 Update Database
             {:else}
               💾 Save to Database
             {/if}
@@ -550,13 +666,18 @@
 
 <style>
   /* Base UI styles */
-  .app-container { max-width: 1000px; margin: 0 auto; padding: 2rem; font-family: sans-serif; }
-  .user-interface section { background: #f9fafb; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e5e7eb; }
-  .user-interface h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
+  .app-container { max-width: 1400px; margin: 0 auto; padding: 2rem; font-family: sans-serif; background: #ffffff; color: #111827; color-scheme: light; }
+  .user-interface { color: #111827; }
+  .user-interface h1, .user-interface h2, .user-interface h3, .user-interface p { color: #111827; }
+  .user-interface section { background: #f9fafb; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e5e7eb; color: #111827; }
+  .user-interface h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; color: #111827; }
   .form-group { display: flex; flex-direction: column; gap: 4px; }
   .form-group label { font-size: 0.875rem; font-weight: 500; color: #374151; }
-  .form-group input, .form-group select { padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; text-transform: uppercase; }
-  .user-interface table input, .user-interface table select { text-transform: uppercase; }
+  .form-group input, .form-group select { padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; text-transform: uppercase; background-color: #ffffff; color: #111827; }
+  .user-interface table input, .user-interface table select { text-transform: uppercase; background-color: #ffffff; color: #111827; }
+  .user-interface table { background: #ffffff; color: #111827; }
+  .user-interface table th { background: #f3f4f6; color: #111827; font-weight: 600; }
+  .user-interface table td { color: #111827; background: #ffffff; }
   .user-interface table th, .user-interface table td { padding: 0.5rem; border: 1px solid #e5e7eb; }
   .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; }
   .btn-primary:hover { background: #1d4ed8; }
