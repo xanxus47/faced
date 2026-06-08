@@ -1,407 +1,129 @@
 <script lang="ts">
-  const stats = [
-    { value: '24/7', label: 'Monitoring' },
-    { value: '12', label: 'Active responders' },
-    { value: '3', label: 'Open incidents' },
-  ];
-
-  const modules = [
+  const features = [
     {
-      icon: '🚨',
-      title: 'Incident reports',
-      desc: 'Log and track disaster incidents in real time.',
-      color: 'danger',
+      icon: '�',
+      title: 'Digital Intake',
+      desc: 'Quickly log family assistance information with an intuitive and responsive form interface.',
     },
     {
-      icon: '👥',
-      title: 'Responder tracking',
-      desc: 'Monitor personnel deployment and availability.',
-      color: 'info',
+      icon: '�️',
+      title: 'A4 PDF Ready',
+      desc: 'Instantly generate perfectly formatted A4 documents for signature and physical filing.',
     },
     {
-      icon: '📍',
-      title: 'Resource mapping',
-      desc: 'Track equipment, evacuation centers, and supplies.',
-      color: 'success',
+      icon: '�',
+      title: 'Centralized Records',
+      desc: 'Securely store, retrieve, update, and manage all family records in a single database.',
     },
     {
-      icon: '📋',
-      title: 'After-action reports',
-      desc: 'Generate post-incident summaries and analysis.',
-      color: 'warning',
+      icon: '⚡',
+      title: 'Smart Automation',
+      desc: 'Automated age calculation and structured inputs reduce human error during data entry.',
     },
   ];
-
-  const alerts = [
-    {
-      title: 'Flood advisory — Barangay Sta. Cruz',
-      desc: 'Rising water levels reported near the creek. Monitoring team deployed.',
-      time: 'Today, 08:42 AM',
-      level: 'Level 2',
-      status: 'danger',
-    },
-    {
-      title: 'Road obstruction — National Highway',
-      desc: 'Fallen tree blocking traffic. Clearing operations in progress.',
-      time: 'Today, 07:15 AM',
-      level: 'Level 1',
-      status: 'warning',
-    },
-    {
-      title: 'Drill completed — Barangay Poblacion',
-      desc: 'Quarterly earthquake drill conducted successfully with 240 participants.',
-      time: 'Yesterday, 03:00 PM',
-      level: 'Resolved',
-      status: 'success',
-    },
-  ];
-
-  const navLinks = ['Alerts', 'Reports', 'Resources', 'Contact'];
 </script>
 
-<div class="page">
+<div class="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary selection:text-primary-foreground">
   <!-- Navbar -->
-  <nav class="nav">
-    <div class="nav-brand">
-      <div class="nav-logo">🛡️</div>
-      <span>MDRRMO Portal</span>
-    </div>
-    <div class="nav-links">
-      {#each navLinks as link}
-        <a href="/{link.toLowerCase()}">{link}</a>
-      {/each}
-      <a href="/faced" style="color: var(--primary); font-weight: bold;">FACED Form</a>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="badge">🔴 System active</div>
-    <h1>Municipal Disaster Risk Reduction<br />&amp; Management Office</h1>
-    <p>
-      Centralized platform for disaster monitoring, incident reporting,
-      and emergency coordination for your municipality.
-    </p>
-    <div class="hero-btns">
-      <a href="/incidents" class="btn-primary">View incident reports</a>
-      <a href="/about" class="btn-secondary">Learn more</a>
-    </div>
-  </section>
-
-  <!-- Stats -->
-  <div class="stats">
-    {#each stats as stat}
-      <div class="stat">
-        <div class="stat-num">{stat.value}</div>
-        <div class="stat-label">{stat.label}</div>
+  <header class="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div class="container flex h-16 max-w-screen-2xl items-center justify-between px-4 mx-auto">
+      <div class="flex items-center gap-2 font-bold text-lg tracking-tight">
+        <span class="text-xl">🛡️</span> MDRRMO <span class="text-muted-foreground font-normal">| FACED</span>
       </div>
-    {/each}
-  </div>
-
-  <!-- Modules -->
-  <section class="section">
-    <div class="section-label">Modules</div>
-    <h2>What this system covers</h2>
-    <p>Manage disaster preparedness and response operations from a single dashboard.</p>
-    <div class="modules">
-      {#each modules as mod}
-        <div class="module-card module-{mod.color}">
-          <div class="module-icon">{mod.icon}</div>
-          <h3>{mod.title}</h3>
-          <p>{mod.desc}</p>
-        </div>
-      {/each}
+      <nav class="flex items-center gap-4 sm:gap-6 text-sm font-medium">
+        <a href="/records" class="text-muted-foreground hover:text-foreground transition-colors">Database Records</a>
+        <a href="/faced" class="bg-primary text-primary-foreground px-4 py-2 rounded-md shadow-sm hover:opacity-90 transition-opacity">
+          Open Form
+        </a>
+      </nav>
     </div>
-  </section>
+  </header>
 
-  <!-- Alerts -->
-  <section class="section">
-    <div class="section-label">Recent alerts</div>
-    <h2>Latest activity</h2>
-    <p>Most recent incidents and system notifications.</p>
-    <div class="alerts">
-      {#each alerts as alert}
-        <div class="alert-item">
-          <div class="alert-dot dot-{alert.status}"></div>
-          <div class="alert-content">
-            <h4>{alert.title}</h4>
-            <p>{alert.desc}</p>
-            <div class="alert-time">{alert.time} · {alert.level}</div>
-          </div>
+  <main class="flex-1">
+    <!-- Hero Section -->
+    <section class="relative py-24 md:py-32 overflow-hidden">
+      <!-- Background subtle gradient -->
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-background z-0 pointer-events-none"></div>
+      
+      <div class="container relative z-10 mx-auto px-4 text-center max-w-4xl flex flex-col items-center">
+        <div class="inline-flex items-center rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground mb-8 bg-background shadow-sm">
+          ✨ System Version 2.0
         </div>
-      {/each}
-    </div>
-  </section>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+          Family Assistance <br class="hidden sm:block" /> 
+          <span class="text-primary">Data Entry System</span>
+        </h1>
+        
+        <p class="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl leading-relaxed">
+          Modernize your municipal disaster response. Efficiently collect, process, update, and print family assistance records with our centralized platform.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <a href="/faced" class="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-lg font-medium text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+            <span>Create New Record</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="/records" class="bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground border border-border px-8 py-3 rounded-lg font-medium text-lg transition-all shadow-sm flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+            <span>View Database</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 px-4 bg-muted/30 border-t border-border">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold tracking-tight mb-4">Core Capabilities</h2>
+          <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Purpose-built tools designed to accelerate disaster aid documentation and streamline administrative workflows.
+          </p>
+        </div>
+        
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {#each features as feature}
+            <div class="bg-card text-card-foreground border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow group">
+              <div class="text-3xl mb-5 bg-primary/10 w-14 h-14 flex items-center justify-center rounded-lg group-hover:scale-110 transition-transform">
+                {feature.icon}
+              </div>
+              <h3 class="font-semibold text-lg mb-2">{feature.title}</h3>
+              <p class="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
+            </div>
+          {/each}
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <section class="py-24 px-4">
+      <div class="max-w-4xl mx-auto bg-primary rounded-3xl p-8 md:p-12 text-center shadow-lg relative overflow-hidden">
+        <div class="relative z-10 text-primary-foreground">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to start processing?</h2>
+          <p class="text-primary-foreground/80 mb-8 max-w-xl mx-auto text-lg">
+            Ensure accurate data collection and rapid response for affected families in your municipality.
+          </p>
+          <a href="/faced" class="inline-block bg-background text-foreground hover:bg-accent hover:text-accent-foreground px-8 py-3 rounded-lg font-medium text-lg transition-colors shadow-sm">
+            Open FACED Form Now
+          </a>
+        </div>
+        <!-- Decorative bg elements -->
+        <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-64 h-64 bg-background/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-64 h-64 bg-background/10 rounded-full blur-3xl pointer-events-none"></div>
+      </div>
+    </section>
+  </main>
 
   <!-- Footer -->
-  <footer class="footer">
-    <p>MDRRMO Information System · Built with SvelteKit &amp; Cloudflare Pages</p>
+  <footer class="border-t border-border py-8 text-center bg-background">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-muted-foreground">
+        &copy; {new Date().getFullYear()} MDRRMO - FACED Information System.
+      </p>
+      <div class="text-sm text-muted-foreground flex gap-4">
+        <span>Built for local government units</span>
+      </div>
+    </div>
   </footer>
 </div>
-
-<style>
-  .page {
-    font-family: 'JetBrains Mono Variable', monospace;
-    max-width: 960px;
-    margin: 0 auto;
-    color: var(--foreground);
-  }
-
-  /* Nav */
-  .nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--background);
-  }
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--foreground);
-  }
-  .nav-logo {
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-md);
-    background: var(--destructive);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-  }
-  .nav-links {
-    display: flex;
-    gap: 20px;
-  }
-  .nav-links a {
-    font-size: 13px;
-    color: var(--muted-foreground);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-  .nav-links a:hover {
-    color: var(--foreground);
-  }
-
-  /* Hero */
-  .hero {
-    padding: 3rem 2rem 2.5rem;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    background: var(--background);
-  }
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--secondary);
-    color: var(--secondary-foreground);
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 1.25rem;
-    border: 1px solid var(--border);
-  }
-  .hero h1 {
-    font-size: 26px;
-    font-weight: 500;
-    line-height: 1.35;
-    margin-bottom: 0.75rem;
-    color: var(--foreground);
-  }
-  .hero p {
-    font-size: 15px;
-    color: var(--muted-foreground);
-    max-width: 480px;
-    margin: 0 auto 1.75rem;
-    line-height: 1.7;
-  }
-  .hero-btns {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn-primary {
-    background: var(--primary);
-    color: var(--primary-foreground);
-    padding: 10px 22px;
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: opacity 0.15s;
-    font-family: inherit;
-  }
-  .btn-primary:hover {
-    opacity: 0.85;
-  }
-  .btn-secondary {
-    background: var(--background);
-    color: var(--foreground);
-    border: 1px solid var(--border);
-    padding: 10px 22px;
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    text-decoration: none;
-    transition: background 0.15s;
-    font-family: inherit;
-  }
-  .btn-secondary:hover {
-    background: var(--accent);
-  }
-
-  /* Stats */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--background);
-  }
-  .stat {
-    background: var(--muted);
-    border-radius: var(--radius-md);
-    padding: 1rem;
-    text-align: center;
-    border: 1px solid var(--border);
-  }
-  .stat-num {
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--foreground);
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--muted-foreground);
-    margin-top: 3px;
-  }
-
-  /* Sections */
-  .section {
-    padding: 2rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--background);
-  }
-  .section-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted-foreground);
-    margin-bottom: 0.5rem;
-  }
-  .section h2 {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 0.4rem;
-    color: var(--foreground);
-  }
-  .section > p {
-    font-size: 14px;
-    color: var(--muted-foreground);
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Modules */
-  .modules {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 10px;
-  }
-  .module-card {
-    background: var(--card);
-    color: var(--card-foreground);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1rem;
-    transition: background 0.15s;
-  }
-  .module-card:hover {
-    background: var(--accent);
-  }
-  .module-icon {
-    font-size: 22px;
-    margin-bottom: 10px;
-  }
-  .module-card h3 {
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 4px;
-    color: var(--card-foreground);
-  }
-  .module-card p {
-    font-size: 12px;
-    color: var(--muted-foreground);
-    line-height: 1.5;
-    margin: 0;
-  }
-  .module-danger { border-top: 3px solid var(--destructive); }
-  .module-info    { border-top: 3px solid var(--ring); }
-  .module-success { border-top: 3px solid oklch(0.6 0.15 145); }
-  .module-warning { border-top: 3px solid oklch(0.75 0.15 80); }
-
-  /* Alerts */
-  .alerts {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .alert-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 12px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    transition: background 0.15s;
-  }
-  .alert-item:hover {
-    background: var(--accent);
-  }
-  .alert-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-top: 5px;
-    flex-shrink: 0;
-  }
-  .dot-danger  { background: var(--destructive); }
-  .dot-warning { background: oklch(0.75 0.15 80); }
-  .dot-success { background: oklch(0.6 0.15 145); }
-  .alert-content h4 {
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 2px;
-    color: var(--card-foreground);
-  }
-  .alert-content p {
-    font-size: 12px;
-    color: var(--muted-foreground);
-    margin: 0;
-    line-height: 1.5;
-  }
-  .alert-time {
-    font-size: 11px;
-    color: var(--muted-foreground);
-    margin-top: 4px;
-  }
-
-  /* Footer */
-  .footer {
-    padding: 1.5rem 2rem;
-    text-align: center;
-    background: var(--background);
-  }
-  .footer p {
-    font-size: 12px;
-    color: var(--muted-foreground);
-  }
-</style>

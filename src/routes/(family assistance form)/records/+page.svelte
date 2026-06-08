@@ -65,10 +65,6 @@
     return (r.family_members ?? []).length;
   }
 
-  function downloadPdf() {
-    window.print();
-  }
-
   /** @type {any} */
   let printRecord = null;
 
@@ -90,7 +86,6 @@
       <p>Family Assistance Card in Emergencies and Disasters — Encoded Entries</p>
     </div>
     <div class="header-actions">
-      <button class="btn-pdf" on:click={downloadPdf}>⬇ Download PDF</button>
       <a href="/faced" class="btn-new">+ New Entry</a>
     </div>
   </div>
@@ -454,14 +449,14 @@
 {/if}
 
 <style>
+  /* Base using Tailwind theme variables */
   .page {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
-    font-family: sans-serif;
-    color: #111827;
-    background: #ffffff;
-    color-scheme: light;
+    font-family: 'JetBrains Mono Variable', sans-serif;
+    color: var(--foreground);
+    background: transparent;
     min-height: 100%;
   }
 
@@ -469,109 +464,107 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
   .page-header h1 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #1c3d70;
-    margin: 0 0 0.25rem;
+    margin: 0 0 0.5rem;
+    color: var(--foreground);
   }
   .page-header p {
-    color: #6b7280;
-    font-size: 0.875rem;
+    color: var(--muted-foreground);
     margin: 0;
+    font-size: 0.95rem;
   }
 
   .header-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
     align-items: center;
   }
   .btn-new {
-    background: #2563eb;
-    color: white;
-    padding: 0.6rem 1.25rem;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.875rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
     text-decoration: none;
-    white-space: nowrap;
-  }
-  .btn-pdf {
-    background: #16a34a;
-    color: white;
-    padding: 0.6rem 1.25rem;
-    border-radius: 6px;
-    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
     font-size: 0.875rem;
-    border: none;
-    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: opacity 0.15s;
     white-space: nowrap;
   }
-  .btn-pdf:hover { background: #15803d; }
-  .btn-new:hover { background: #1d4ed8; }
+  .btn-new:hover { opacity: 0.9; }
 
   /* Stats */
   .stats-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
   .stat-card {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     gap: 2px;
   }
   .stat-num {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #1c3d70;
+    color: var(--foreground);
     line-height: 1;
   }
   .stat-label {
-    font-size: 0.8rem;
-    color: #6b7280;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
   }
 
   /* Filters */
   .filters {
     display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
     align-items: center;
     flex-wrap: wrap;
   }
-  .search-input {
+  .search-input, .filter-select {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--input);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    transition: outline 0.15s;
+  }
+  .search-input { 
     flex: 1;
     min-width: 200px;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.875rem;
   }
-  .filter-select {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    background: white;
+  .search-input:focus, .filter-select:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: -1px;
+    border-color: transparent;
   }
   .btn-clear {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: white;
+    background: transparent;
+    color: var(--muted-foreground);
+    border: none;
     font-size: 0.875rem;
     cursor: pointer;
-    color: #6b7280;
+    text-decoration: underline;
+    padding: 0.5rem 0.75rem;
   }
-  .btn-clear:hover { background: #f3f4f6; }
+  .btn-clear:hover { color: var(--foreground); background: transparent; }
 
   /* State boxes */
   .state-box {
@@ -710,39 +703,42 @@
 
   .results-count {
     font-size: 0.8rem;
-    color: #9ca3af;
+    color: var(--muted-foreground);
     margin-top: 0.75rem;
     text-align: right;
   }
 
   .pdf-cell { width: 70px; }
+  
   .btn-row-pdf {
-    background: #7c3aed;
-    color: white;
+    background: var(--primary);
+    color: var(--primary-foreground);
     border: none;
-    border-radius: 4px;
-    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
+    transition: opacity 0.15s;
   }
-  .btn-row-pdf:hover { background: #6d28d9; }
+  .btn-row-pdf:hover { opacity: 0.9; }
   
   .btn-row-edit {
     display: inline-block;
-    background: #eab308;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 3px 8px;
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px 10px;
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     text-decoration: none;
+    transition: background 0.15s;
   }
-  .btn-row-edit:hover { background: #ca8a04; }
+  .btn-row-edit:hover { background: var(--accent); }
 
   /* A4 Print template styles */
   .print-record-container { display: none; font-family: Arial, Helvetica, sans-serif; color: black; font-size: 10px; line-height: 1.2; margin: 0 auto; width: 100%; max-width: 210mm; }

@@ -665,29 +665,110 @@
 </div>
 
 <style>
-  /* Base UI styles */
-  .app-container { max-width: 1400px; margin: 0 auto; padding: 2rem; font-family: sans-serif; background: #ffffff; color: #111827; color-scheme: light; }
-  .user-interface { color: #111827; }
-  .user-interface h1, .user-interface h2, .user-interface h3, .user-interface p { color: #111827; }
-  .user-interface section { background: #f9fafb; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e5e7eb; color: #111827; }
-  .user-interface h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; color: #111827; }
-  .form-group { display: flex; flex-direction: column; gap: 4px; }
-  .form-group label { font-size: 0.875rem; font-weight: 500; color: #374151; }
-  .form-group input, .form-group select { padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; text-transform: uppercase; background-color: #ffffff; color: #111827; }
-  .user-interface table input, .user-interface table select { text-transform: uppercase; background-color: #ffffff; color: #111827; }
-  .user-interface table { background: #ffffff; color: #111827; }
-  .user-interface table th { background: #f3f4f6; color: #111827; font-weight: 600; }
-  .user-interface table td { color: #111827; background: #ffffff; }
-  .user-interface table th, .user-interface table td { padding: 0.5rem; border: 1px solid #e5e7eb; }
-  .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; }
-  .btn-primary:hover { background: #1d4ed8; }
-  .btn-save { background: #16a34a; color: white; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; }
-  .btn-save:hover:not(:disabled) { background: #15803d; }
-  .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
-  .actions { display: flex; gap: 0.75rem; }
-  .save-message { margin-top: 0.5rem; font-size: 0.875rem; font-weight: 500; }
-  .save-message.saved { color: #16a34a; }
-  .save-message.error { color: #dc2626; }
+  /* Base UI styles using Tailwind/layout.css theme variables */
+  .app-container { max-width: 1400px; margin: 0 auto; padding: 2rem; font-family: 'JetBrains Mono Variable', sans-serif; background: transparent; }
+  .user-interface { color: var(--foreground); }
+  .user-interface h1, .user-interface h2, .user-interface h3, .user-interface p { color: var(--foreground); }
+  
+  .user-interface section { 
+    background: var(--card); 
+    padding: 1.5rem; 
+    border-radius: var(--radius); 
+    margin-bottom: 2rem; 
+    border: 1px solid var(--border); 
+    color: var(--card-foreground);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .user-interface h2 { 
+    font-size: 1.25rem; 
+    font-weight: 600; 
+    margin-bottom: 1.5rem; 
+    border-bottom: 1px solid var(--border); 
+    padding-bottom: 0.75rem; 
+    color: var(--foreground); 
+  }
+  
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 0.875rem; font-weight: 500; color: var(--muted-foreground); }
+  
+  .form-group input, .form-group select { 
+    padding: 0.6rem 0.75rem; 
+    border: 1px solid var(--input); 
+    border-radius: var(--radius-md); 
+    text-transform: uppercase; 
+    background-color: var(--background); 
+    color: var(--foreground); 
+    transition: outline 0.15s, border-color 0.15s;
+  }
+  
+  .form-group input:focus, .form-group select:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: -1px;
+    border-color: transparent;
+  }
+  
+  .user-interface table input, .user-interface table select { 
+    text-transform: uppercase; 
+    background-color: transparent; 
+    color: var(--foreground); 
+    border: 1px solid transparent;
+    padding: 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .user-interface table input:focus, .user-interface table select:focus {
+    border-color: var(--ring);
+    background-color: var(--background);
+  }
+  
+  .user-interface table { width: 100%; border-collapse: collapse; }
+  .user-interface table th { 
+    background: var(--muted); 
+    color: var(--muted-foreground); 
+    font-weight: 600; 
+    text-align: left;
+    font-size: 0.875rem;
+  }
+  
+  .user-interface table td { 
+    color: var(--foreground); 
+    background: var(--card); 
+  }
+  
+  .user-interface table th, .user-interface table td { 
+    padding: 0.75rem 0.5rem; 
+    border-bottom: 1px solid var(--border); 
+  }
+  
+  .btn-primary { 
+    background: var(--primary); 
+    color: var(--primary-foreground); 
+    padding: 0.75rem 1.5rem; 
+    border-radius: var(--radius-md); 
+    font-weight: 600; 
+    border: none; 
+    cursor: pointer; 
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  
+  .btn-save { 
+    background: oklch(0.6 0.15 145); /* success green */
+    color: white; 
+    padding: 0.75rem 1.5rem; 
+    border-radius: var(--radius-md); 
+    font-weight: 600; 
+    border: none; 
+    cursor: pointer; 
+    transition: opacity 0.15s;
+  }
+  .btn-save:hover:not(:disabled) { opacity: 0.9; }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+  
+  .actions { display: flex; gap: 1rem; margin-top: 1rem; }
+  .save-message { margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; }
+  .save-message.saved { color: oklch(0.6 0.15 145); }
+  .save-message.error { color: var(--destructive); }
 
   /* Utilities */
   .flex { display: flex; }
