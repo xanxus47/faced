@@ -45,7 +45,7 @@
     }
   }
 
-  function handleKeydown(e: KeyboardEvent) {
+  function handleKeydown(e) {
     if (e.key === 'Enter') handleLogin();
   }
 </script>
