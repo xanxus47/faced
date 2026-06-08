@@ -1,6 +1,8 @@
 <script>
     import './layout.css';
     import { page } from '$app/stores';
+    import { goto } from '$app/navigation';
+    import { onMount } from 'svelte';
     import { Button } from '$lib/components/ui/button';
     import {
         PanelLeftClose,
@@ -9,12 +11,27 @@
         Database,
         LogOut
     } from 'lucide-svelte';
-    import { logout } from '$lib/auth.js';
+    import { logout, getSession } from '$lib/auth.js';
 
     let { children } = $props();
     let isCollapsed = $state(false);
     let isLoggingOut = $state(false);
     let showLogoutConfirm = $state(false);
+
+    onMount(() => {
+        const checkAuth = () => {
+            if (!getSession()) {
+                goto('/login', { replaceState: true });
+            }
+        };
+        
+        checkAuth();
+        window.addEventListener('pageshow', checkAuth);
+        
+        return () => {
+            window.removeEventListener('pageshow', checkAuth);
+        };
+    });
 
     function toggleSidebar() {
         isCollapsed = !isCollapsed;

@@ -1,11 +1,28 @@
 <script>
-  import { login } from '$lib/auth.js';
+  import { login, getSession } from '$lib/auth.js';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
   let email = '';
   let password = '';
   let showPassword = false;
   let status = 'idle'; // 'idle' | 'loading' | 'error'
   let errorMessage = '';
+
+  onMount(() => {
+    const checkAuth = () => {
+      if (getSession()) {
+        goto('/records', { replaceState: true });
+      }
+    };
+    
+    checkAuth();
+    window.addEventListener('pageshow', checkAuth);
+    
+    return () => {
+      window.removeEventListener('pageshow', checkAuth);
+    };
+  });
 
   async function handleLogin() {
     if (!email || !password) {
