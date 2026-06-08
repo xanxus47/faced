@@ -4,6 +4,27 @@
   const CHECK = '\u2714';
 
   let isPrinting = false;
+  let saveStatus = 'idle'; // 'idle' | 'saving' | 'saved' | 'error'
+  let saveMessage = '';
+
+  async function saveToDatabase() {
+    saveStatus = 'saving';
+    saveMessage = '';
+    try {
+      const res = await fetch('/api/faced', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || `HTTP ${res.status}`);
+      saveStatus = 'saved';
+      saveMessage = `Saved! Record ID: ${data.id}`;
+    } catch (err) {
+      saveStatus = 'error';
+      saveMessage = `Failed to save: ${err instanceof Error ? err.message : String(err)}`;
+    }
+  }
 
   function calculateAge(birthdateStr) {
     if (!birthdateStr) return '';
@@ -307,8 +328,25 @@
         </section>
 
         <div class="actions">
+          <button
+            type="button"
+            class="btn-save"
+            on:click={saveToDatabase}
+            disabled={saveStatus === 'saving'}
+          >
+            {#if saveStatus === 'saving'}
+              Saving...
+            {:else if saveStatus === 'saved'}
+              ✓ Saved
+            {:else}
+              💾 Save to Database
+            {/if}
+          </button>
           <button type="submit" class="btn-primary">Generate & Print A4 PDF</button>
         </div>
+        {#if saveMessage}
+          <p class="save-message {saveStatus}">{saveMessage}</p>
+        {/if}
       </form>
     </div>
   {/if}
@@ -522,6 +560,13 @@
   .user-interface table th, .user-interface table td { padding: 0.5rem; border: 1px solid #e5e7eb; }
   .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; }
   .btn-primary:hover { background: #1d4ed8; }
+  .btn-save { background: #16a34a; color: white; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; }
+  .btn-save:hover:not(:disabled) { background: #15803d; }
+  .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+  .actions { display: flex; gap: 0.75rem; }
+  .save-message { margin-top: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+  .save-message.saved { color: #16a34a; }
+  .save-message.error { color: #dc2626; }
 
   /* Utilities */
   .flex { display: flex; }
