@@ -32,8 +32,8 @@
       </div>
       <nav class="flex items-center gap-4 sm:gap-6 text-sm font-medium">
         <a href="/records" class="text-muted-foreground hover:text-foreground transition-colors">Database Records</a>
-        <a href="/faced" class="bg-primary text-primary-foreground px-4 py-2 rounded-md shadow-sm hover:opacity-90 transition-opacity">
-          Open Form
+        <a href="/login" class="bg-primary text-primary-foreground px-4 py-2 rounded-md shadow-sm hover:opacity-90 transition-opacity">
+          Login
         </a>
       </nav>
     </div>
@@ -60,9 +60,9 @@
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <a href="/faced" class="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-lg font-medium text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-            <span>Create New Record</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          <a href="/login" class="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-lg font-medium text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+            <span>Login Now</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
           </a>
           <a href="/records" class="bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground border border-border px-8 py-3 rounded-lg font-medium text-lg transition-all shadow-sm flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
@@ -104,8 +104,8 @@
           <p class="text-primary-foreground/80 mb-8 max-w-xl mx-auto text-lg">
             Ensure accurate data collection and rapid response for affected families in your municipality.
           </p>
-          <a href="/faced" class="inline-block bg-background text-foreground hover:bg-accent hover:text-accent-foreground px-8 py-3 rounded-lg font-medium text-lg transition-colors shadow-sm">
-            Open FACED Form Now
+          <a href="/login" class="inline-block bg-background text-foreground hover:bg-accent hover:text-accent-foreground px-8 py-3 rounded-lg font-medium text-lg transition-colors shadow-sm">
+            Login to Continue
           </a>
         </div>
         <!-- Decorative bg elements -->
