@@ -38,7 +38,7 @@
 
     if (result.success) {
       // Redirect to records page on success
-      window.location.href = '/records';
+      window.location.href = '/faced';
     } else {
       status = 'error';
       errorMessage = result.message || 'Login failed. Please check your credentials.';
