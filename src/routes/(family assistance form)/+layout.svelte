@@ -40,7 +40,7 @@
     async function handleLogout() {
     isLoggingOut = true;
     await logout();
-    window.location.replace('/login'); // 👈 change this line
+    window.location.replace('/'); // 👈 change this line
 }
 
     function confirmLogout() {
