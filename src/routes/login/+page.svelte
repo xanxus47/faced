@@ -6,7 +6,7 @@
   let email = '';
   let password = '';
   let showPassword = false;
-  let status = 'idle'; // 'idle' | 'loading' | 'error'
+  let status = 'idle';
   let errorMessage = '';
 
   onMount(() => {
@@ -37,7 +37,6 @@
     const result = await login({ email, password });
 
     if (result.success) {
-      // Redirect to records page on success
       window.location.href = '/faced';
     } else {
       status = 'error';
@@ -50,91 +49,463 @@
   }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-background p-6 font-sans">
-  <div class="w-full max-w-md bg-card text-card-foreground border border-border rounded-xl shadow-lg overflow-hidden flex flex-col">
-
-    <!-- Header -->
-    <div class="bg-primary text-primary-foreground p-8 text-center flex flex-col items-center">
-      <div class="inline-block bg-background/20 border border-background/30 text-primary-foreground text-[11px] font-bold tracking-widest px-3 py-1 rounded-full mb-4 uppercase">
-        DSWD
-      </div>
-      <h1 class="text-2xl font-bold mb-1">Welcome back</h1>
-      <p class="text-sm text-primary-foreground/80 m-0">Sign in to access FACED records</p>
+<div class="login-page">
+  <!-- Left Panel — Branding -->
+  <div class="brand-panel">
+    <div class="brand-content">
+      <div class="brand-logo">F</div>
+      <h1 class="brand-title">FACED</h1>
+      <p class="brand-sub">Family Assistance Card in<br/>Emergencies and Disasters</p>
+      <div class="brand-divider"></div>
+      <p class="brand-org">MDRRMO Information System</p>
     </div>
 
-    <!-- Form -->
-    <div class="p-8 flex flex-col gap-5">
-      <div class="flex flex-col gap-2">
-        <label for="email" class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email address</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="you@example.com"
-          bind:value={email}
-          on:keydown={handleKeydown}
-          disabled={status === 'loading'}
-          autocomplete="email"
-          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-        />
+    <div class="brand-decoration d1"></div>
+    <div class="brand-decoration d2"></div>
+    <div class="brand-decoration d3"></div>
+  </div>
+
+  <!-- Right Panel — Form -->
+  <div class="form-panel">
+    <div class="form-wrapper">
+      <!-- Mobile logo -->
+      <div class="mobile-logo">
+        <div class="brand-logo sm">F</div>
+        <span class="mobile-logo-text">FACED</span>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <label for="password" class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Password</label>
-        <div class="relative">
-          <input
-            id="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••"
-            bind:value={password}
-            on:keydown={handleKeydown}
-            disabled={status === 'loading'}
-            autocomplete="current-password"
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors pr-10"
-          />
-          <button
-            type="button"
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors opacity-70 hover:opacity-100 p-1"
-            on:click={() => showPassword = !showPassword}
-            tabindex="-1"
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
-          >
-            {showPassword ? '🙈' : '👁️'}
-          </button>
-        </div>
+      <div class="form-header">
+        <h2 class="form-title">Welcome back</h2>
+        <p class="form-subtitle">Sign in to your account to continue</p>
       </div>
 
-      {#if status === 'error'}
-        <div class="bg-destructive/15 text-destructive border border-destructive/20 px-4 py-3 rounded-md text-sm font-medium" role="alert">
-          ⚠ {errorMessage}
+      <form class="form-body" on:submit|preventDefault={handleLogin}>
+        <!-- Email -->
+        <div class="field">
+          <label for="email" class="field-label">Email address</label>
+          <div class="input-wrap">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              bind:value={email}
+              on:keydown={handleKeydown}
+              disabled={status === 'loading'}
+              autocomplete="email"
+              class="input"
+            />
+          </div>
         </div>
-      {/if}
 
-      <button
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mt-2"
-        on:click={handleLogin}
-        disabled={status === 'loading'}
-      >
-        {#if status === 'loading'}
-          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          Signing in…
-        {:else}
-          Sign In
+        <!-- Password -->
+        <div class="field">
+          <label for="password" class="field-label">Password</label>
+          <div class="input-wrap">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter your password"
+              bind:value={password}
+              on:keydown={handleKeydown}
+              disabled={status === 'loading'}
+              autocomplete="current-password"
+              class="input input-password"
+            />
+            <button
+              type="button"
+              class="toggle-pw"
+              on:click={() => showPassword = !showPassword}
+              tabindex="-1"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {#if showPassword}
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+              {:else}
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+              {/if}
+            </button>
+          </div>
+        </div>
+
+        <!-- Error -->
+        {#if status === 'error'}
+          <div class="error-msg" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <span>{errorMessage}</span>
+          </div>
         {/if}
-      </button>
-    </div>
 
-    <!-- Footer -->
-    <div class="p-6 text-center border-t border-border bg-muted/20">
-      <p class="text-sm text-muted-foreground m-0">
-        Don't have an account? 
-        <a href="/register" class="font-semibold text-primary hover:underline hover:text-primary/80 transition-colors">
-          Create one
-        </a>
-      </p>
-    </div>
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="submit-btn"
+          disabled={status === 'loading'}
+        >
+          {#if status === 'loading'}
+            <span class="spinner"></span>
+            Signing in...
+          {:else}
+            Sign In
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          {/if}
+        </button>
+      </form>
 
+      <div class="form-footer">
+        <p>Don't have an account? <a href="/register">Create one</a></p>
+      </div>
+
+      <a href="/" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Back to homepage
+      </a>
+    </div>
   </div>
 </div>
+
+<style>
+  /* ===== Page Layout ===== */
+  .login-page {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'JetBrains Mono Variable', system-ui, sans-serif;
+    color: var(--foreground);
+    background: var(--background);
+  }
+
+  /* ===== Left Brand Panel ===== */
+  .brand-panel {
+    display: none;
+    width: 45%;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 3rem;
+  }
+  .brand-logo {
+    width: 4rem;
+    height: 4rem;
+    background: var(--primary-foreground);
+    color: var(--primary);
+    border-radius: var(--radius-lg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  .brand-logo.sm {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius-md);
+  }
+  .brand-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin: 0 0 0.5rem;
+  }
+  .brand-sub {
+    font-size: 0.9rem;
+    opacity: 0.75;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .brand-divider {
+    width: 3rem;
+    height: 2px;
+    background: var(--primary-foreground);
+    opacity: 0.3;
+    margin: 1.75rem auto;
+    border-radius: 1px;
+  }
+  .brand-org {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .brand-decoration {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--primary-foreground);
+    pointer-events: none;
+  }
+  .d1 {
+    width: 350px;
+    height: 350px;
+    opacity: 0.04;
+    top: -100px;
+    right: -80px;
+  }
+  .d2 {
+    width: 250px;
+    height: 250px;
+    opacity: 0.03;
+    bottom: -60px;
+    left: -60px;
+  }
+  .d3 {
+    width: 120px;
+    height: 120px;
+    opacity: 0.06;
+    bottom: 25%;
+    right: 15%;
+  }
+
+  /* ===== Right Form Panel ===== */
+  .form-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--background);
+  }
+  .form-wrapper {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  /* Mobile Logo */
+  .mobile-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
+  }
+  .mobile-logo-text {
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--foreground);
+  }
+
+  /* Form Header */
+  .form-header {
+    margin-bottom: 2rem;
+  }
+  .form-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.4rem;
+    color: var(--foreground);
+  }
+  .form-subtitle {
+    font-size: 0.9rem;
+    color: var(--muted-foreground);
+    margin: 0;
+  }
+
+  /* Form Body */
+  .form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  /* Fields */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .field-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: var(--muted-foreground);
+    pointer-events: none;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+  .input {
+    width: 100%;
+    height: 2.75rem;
+    padding: 0 0.85rem 0 2.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    font-family: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  .input::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.5;
+  }
+  .input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 15%, transparent);
+  }
+  .input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .input-password {
+    padding-right: 3rem;
+  }
+
+  /* Toggle Password */
+  .toggle-pw {
+    position: absolute;
+    right: 0.65rem;
+    background: none;
+    border: none;
+    padding: 0.3rem;
+    cursor: pointer;
+    color: var(--muted-foreground);
+    opacity: 0.5;
+    transition: opacity 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-sm);
+  }
+  .toggle-pw:hover {
+    opacity: 1;
+    color: var(--foreground);
+  }
+
+  /* Error */
+  .error-msg {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: color-mix(in oklch, var(--destructive) 10%, transparent);
+    color: var(--destructive);
+    border: 1px solid color-mix(in oklch, var(--destructive) 25%, transparent);
+    border-radius: var(--radius-md);
+    font-size: 0.825rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .error-msg svg {
+    flex-shrink: 0;
+  }
+
+  /* Submit Button */
+  .submit-btn {
+    width: 100%;
+    height: 2.85rem;
+    margin-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .submit-btn:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+  .submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Spinner */
+  .spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--primary-foreground);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Footer */
+  .form-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .form-footer p {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+    margin: 0;
+  }
+  .form-footer a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .form-footer a:hover {
+    opacity: 0.75;
+    text-decoration: underline;
+  }
+
+  /* Back Link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 1.25rem;
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .back-link:hover {
+    color: var(--foreground);
+  }
+
+  /* ===== Responsive ===== */
+  @media (min-width: 900px) {
+    .brand-panel {
+      display: flex;
+    }
+    .mobile-logo {
+      display: none;
+    }
+  }
+</style>
