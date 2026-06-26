@@ -37,7 +37,7 @@
     const result = await login({ email, password });
 
     if (result.success) {
-      window.location.href = '/faced';
+      window.location.replace('/faced');
     } else {
       status = 'error';
       errorMessage = result.message || 'Login failed. Please check your credentials.';

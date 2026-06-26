@@ -43,7 +43,7 @@
     const result = await register({ email, username, password, confirmPassword });
 
     if (result.success) {
-      window.location.href = '/records';
+      window.location.replace('/records');
     } else {
       status = 'error';
       if (result.message?.toLowerCase().includes('already taken') || result.message?.toLowerCase().includes('409')) {
